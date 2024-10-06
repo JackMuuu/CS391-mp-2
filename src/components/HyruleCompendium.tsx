@@ -1,5 +1,13 @@
 import styled from 'styled-components';
-import { Item} from '../interfaces/types.ts';
+import {
+    Item,
+    isMonster,
+    isEquipment,
+    isMaterialOrCreature,
+    isMaterial,
+    isCreature,
+    isTreasure,
+} from '../interfaces/types.ts';
 
 const ItemsContainer = styled.div`
   display: flex;
@@ -46,8 +54,8 @@ const HyruleCompendium: React.FC<HyruleCompendiumProps> = ({ items, category }) 
                     <ItemImage src={item.image} alt={item.name} />
                     <ItemDescription>{item.description}</ItemDescription>
 
-                    {/* Render fields based on category */}
-                    {category === 'monsters' || category === 'treasure' ? (
+                    {/* Monsters and Treasure */}
+                    {(isMonster(item) || isTreasure(item)) && (
                         <>
                             <p>
                                 <strong>Common Locations:</strong>{' '}
@@ -57,32 +65,41 @@ const HyruleCompendium: React.FC<HyruleCompendiumProps> = ({ items, category }) 
                                 <strong>Drops:</strong> {item.drops?.join(', ') || 'None'}
                             </p>
                         </>
-                    ) : null}
+                    )}
 
-                    {category === 'equipment' ? (
+                    {/* Equipment */}
+                    {isEquipment(item) && (
                         <>
                             <p>
-                                <strong>Attack:</strong> {(item as any).attack || 'N/A'}
+                                <strong>Attack:</strong> {item.attack || 'N/A'}
                             </p>
                             <p>
-                                <strong>Defense:</strong> {(item as any).defense || 'N/A'}
+                                <strong>Defense:</strong> {item.defense || 'N/A'}
                             </p>
                         </>
-                    ) : null}
+                    )}
 
-                    {category === 'materials' || category === 'creatures' ? (
+                    {/* Materials and Creatures */}
+                    {isMaterialOrCreature(item) && (
                         <>
                             <p>
-                                <strong>Cooking Effect:</strong> {(item as any).cooking_effect || 'None'}
+                                <strong>Cooking Effect:</strong> {item.cooking_effect || 'None'}
                             </p>
                             <p>
-                                <strong>Hearts Recovered:</strong> {(item as any).hearts_recovered || 0}
+                                <strong>Hearts Recovered:</strong> {item.hearts_recovered || 0}
                             </p>
                         </>
-                    ) : null}
+                    )}
+
+                    {/* Common Locations for Materials and Creatures */}
+                    {(isMaterial(item) || isCreature(item)) && item.common_locations && (
+                        <p>
+                            <strong>Common Locations:</strong>{' '}
+                            {item.common_locations.join(', ') || 'Unknown'}
+                        </p>
+                    )}
                 </ItemCard>
             ))}
-
         </ItemsContainer>
     );
 };
