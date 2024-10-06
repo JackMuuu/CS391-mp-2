@@ -45,7 +45,7 @@ interface HyruleCompendiumProps {
     category: string;
 }
 
-const HyruleCompendium: React.FC<HyruleCompendiumProps> = ({ items, category }) => {
+const HyruleCompendium: React.FC<HyruleCompendiumProps> = ({ items }) => {
     return (
         <ItemsContainer>
             {items.map((item) => (
